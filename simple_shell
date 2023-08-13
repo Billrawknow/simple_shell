@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -e
+
+SCRIPTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOTDIR="$(cd "${SCRIPTDIR}/.." && pwd)"
+
+set -x
+
+# Generate AUTHORS file with specified authors
+cat > "${ROOTDIR}/AUTHORS" <<- EOF
+	# Authors for the repository
+	# Add your own names and emails here.
+
+	Bildad Ronoh <bildadronoh@gmail.com>
+	VANISA KORINGURA <iamyirmeyahu@gmail.com>
+EOF
