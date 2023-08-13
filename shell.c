@@ -16,7 +16,7 @@ int main() {
             break;
         }
 
-        command[strcspn(command, "\n")] = '\0'; // Remove newline character
+        command[strcspn(command, "\n")] = '\0'; /* Remove newline character */
 
         if (strcmp(command, "exit") == 0) {
             printf("Exiting the shell...\n");
