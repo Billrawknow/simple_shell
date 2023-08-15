@@ -1,31 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
-#define MAX_COMMAND_LENGTH 100
+#define MAX_INPUT_SIZE 1024
 
-int main() {
-    char command[MAX_COMMAND_LENGTH];
-
+int main(void) {
+    char input[MAX_INPUT_SIZE];
+    pid_t pid;
+    
     while (1) {
         printf("#cisfun$ ");
-        fflush(stdout);
-
-        if (fgets(command, sizeof(command), stdin) == NULL) {
-            printf("\nExiting the shell...\n");
-            break;
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+            perror("fgets");
+            exit(EXIT_FAILURE);
         }
-
-        command[strcspn(command, "\n")] = '\0'; /* Remove newline character */
-
-        if (strcmp(command, "exit") == 0) {
+        
+        /* Remove newline character from input */
+        input[strcspn(input, "\n")] = '\0';
+        
+        if (strcmp(input, "exit") == 0) {
             printf("Exiting the shell...\n");
             break;
         }
-
-        // Handle other commands here
-        // ...
+        
+        pid = fork();
+        if (pid == -1) {
+            perror("fork");
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            /* Child process */
+            execlp(input, input, NULL);
+            perror("execlp");
+            exit(EXIT_FAILURE);
+        } else {
+            /* Parent process */
+            int status;
+            waitpid(pid, &status, 0);
+        }
     }
-
+    
     return 0;
 }
